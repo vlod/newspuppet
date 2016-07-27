@@ -1,0 +1,14 @@
+$baseTextColor: green;
+
+$sidebarColor:#333;
+$sidebarItemHover:lighten($sidebarColor,10%);
+$sidebarItemSelected:green;
+
+$font-family-base: sans-serif;
+
+/* https://scotch.io/quick-tips/default-sizes-for-twitter-bootstraps-media-queries */
+$screen-xs:320px;
+$screen-sm:480px;
+$screen-md:768px;
+$screen-lg:992px;
+$screen-xl:1200px;

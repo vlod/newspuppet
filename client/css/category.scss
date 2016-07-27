@@ -1,0 +1,47 @@
+@import "base";
+
+/* client/components/category.scss */
+.category_page {
+  h3 {
+    color:$baseTextColor;
+  }
+  .feed {
+    padding-left:10px;
+  }
+  ul:nth-of-type(1) {
+    padding-left:0px;
+  }
+  .articles {
+    ul {
+      padding-left:15px;
+    }
+    li {
+      list-style: none;
+    }
+    a {
+      color: $baseTextColor;
+      font-size: 12px;
+      font-weight: 300;
+
+      &:visited {
+        color: red;
+        font-style: italic;
+      }
+    }
+    a.comments {
+      font-size:10px;
+      padding-left:5px;
+      color: darkgreen;
+
+      &:visited {
+        color:red;
+        font-style: italic;
+      }
+    }
+    .fa-sign-in {
+      color: darkgreen;
+      padding-left:5px;
+      font-size:11px;
+    }
+  }
+}

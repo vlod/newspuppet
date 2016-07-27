@@ -1,0 +1,5 @@
+{
+  "source": {
+    "exclude": ["out", "node_modules", "data", "public"]
+  }
+}

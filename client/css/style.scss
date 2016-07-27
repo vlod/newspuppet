@@ -1,0 +1,36 @@
+@import "base";
+
+/* client/components/style.scss */
+body {
+  padding-top:50px;
+  font-family: $font-family-base;
+
+  /*remote pesky dotted link in FF*/
+  a:hover, a:active, a:focus, a:link, a:visited {
+    outline: 0;
+    outline: 0 !important;
+    outline-style:none;
+  }
+
+  h1 {
+    font-size:30px;
+  }
+  .mainContent {
+    margin-left:60px;
+  }
+  @media (min-width: $screen-md) {
+    .mainContent {
+      margin-left:145px;
+    }
+  }
+}
+
+/* bootstrap overrides */
+.btn-primary {
+  background-color:$baseTextColor;
+  border-color:darken($baseTextColor,10%);
+
+  &:focus, &:active, &:active.focus, &:active:focus, &:hover {
+    background-color:$sidebarItemHover;
+  }
+}

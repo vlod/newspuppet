@@ -1,0 +1,9 @@
+// http://survivejs.com/webpack_react/linting_in_webpack/
+{
+  "extends": "airbnb",
+  "rules": {
+    "brace-style": [2, "stroustrup"],
+    "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 4 }],
+    "max-len": 0
+  }
+}

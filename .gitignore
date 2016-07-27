@@ -1,0 +1,6 @@
+node_modules
+public/resources
+npm-debug.log
+data
+docker/rethinkdb/rethinkdb_data
+out

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+   <!-- https://www.base64-image.de -->
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfgBg0WCChCfWFvAAABEElEQVQoz3XPOy+DcRQG8N+/qsogUaFNDEKJSN6dSbq+g10M/WxdDEaWxiYmAwapQVwGInFp3KMq6jW0ruGc5JzkuZycJ/isaMiisoyKpdr5BxogyphX7o6L3ROCQ0etlzUVq7UmIZpRtjCWi4x5ci0xoM+pPcc3b8sqIUrmzOpx58GrBImUfv1aNm1I02PFiKLhDp3g0o5TU0jDiQt78iZNeLVrVx3JhyB0/r2378wWkq9oUu2VCJ3+Xal21oDww/nrQvg2/xT8L0l9B//6IQ3THjV+kBk5ubYpOswWCwoKaGrZNign61bdleZRIJoUi7tK+eyoccfq6u6e39ZVVWsHn3ejXiWxGFVV67VGG38HfZRQ/C68YnAAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTYtMDctMTlUMTU6MTA6MjUtMDY6MDC66lInAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE2LTA2LTEzVDIyOjA4OjQwLTA2OjAwr/pKeAAAAABJRU5ErkJggg==" />
+
+  {{#isProduction}}
+    <link rel="stylesheet" type="text/css" href="/resources/{{ application_css }}">
+  {{/isProduction}}
+  </head>
+  <body data-grid-framework="b3">
+    {{{ yield }}}
+    <div id="app"></div>
+
+    {{^isProduction}}
+      <!-- used to indicate the bootstap breakpoints - dev mode only -->
+      <div class="bootstrap_media_breaks" style="position:fixed;padding:2px;z-index:2500; top:0;left:0;background-color:#ddd;color:red;border:1px solid #888;font-weight: bold;" title="bootstrap media breakpoint">
+        <span class="visible-xs-block">XS</span>
+        <span class="visible-sm-block">SM</span>
+        <span class="visible-md-block">MD</span>
+        <span class="visible-lg-block">LG</span>
+      </div>
+    {{/isProduction}}
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script src="/resources/{{ application_js }}"></script>
+  </body>
+</html>
