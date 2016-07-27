@@ -1,16 +1,19 @@
 Newspuppet
 =====================
-Load rss/atom feed data.
+A hack project to play around with rss/atom feed data.
 
-Dependencies
-------------
-- bootstrap
-- sass
-- webpack-hot-middleware
-- expressjs
-- react-router
-- webpack-md5-hash
-- beanstalkd
+Technologies used
+------------------
+- React (Front end UI)
+- Redux (Front end data store)
+- ReactRouter (Front end routing)
+- Javascript ES6 (Language for front/backend)
+- Expressjs/Nodejs (Backend)
+- RethinkDB (Data store)
+- Beanstalk (Event bus)
+- Webpack (For code assembly)
+- Mocha/Chai (Testing)
+- Docker (containers for beanstalk and rethinkdb)
 
 Installation
 ------------
