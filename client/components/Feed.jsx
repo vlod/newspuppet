@@ -2,7 +2,7 @@ import React from 'react';
 import FeedItem from './FeedItem';
 
 const Feed = (props) => {
-  const { feed, snippetHandler } = props;
+  const { feed } = props;
   return (
     <div className="feed">
       <h3>{feed.name}</h3>
