@@ -30,8 +30,7 @@ winston.info('connecting to beanstalkd');
 
 // connect to rethinkdb and store connection in app
 const dbConfig = require(`${__dirname}/config/db.js`);
-const envHack = (app.get('env') === 'production') ? 'development' : app.get('env');
-dbConfig.db = `${dbConfig.dbName}_${envHack}`; // i.e. newspuppet_development
+dbConfig.db = `${dbConfig.dbName}_${app.get('env')}`; // i.e. newspuppet_development
 app.locals.rdb = require('rethinkdbdash')(dbConfig);
 
 // create db, tables and indexes
