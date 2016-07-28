@@ -41,4 +41,9 @@ emitter.on('connect', () => {
 emitter.on('error', (err) => {
   console.log(`client error: ${err}`);
 });
+
+emitter.on('close', () => {
+  console.log('client closed connection');
+});
+
 emitter.connect();

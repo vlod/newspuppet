@@ -14,7 +14,10 @@ module.exports = () => {
     });
   })
   .on('error', (err) => {
-    winston.error('client error:', { err });
+    winston.error('emitter client error:', { err });
+  })
+  .on('close', () => {
+    winston.error('emitter client closed connection');
   })
   .connect();
 
