@@ -3,7 +3,7 @@ const fivebeans = require('fivebeans');
 const Beanworker = fivebeans.worker;
 
 module.exports = () => {
-  const emitter = new fivebeans.client('0.0.0.0', 11300);
+  const emitter = new fivebeans.client('127.0.0.1', 11300);
   emitter.on('connect', (err) => {
     if (err) throw err;
 
@@ -21,7 +21,7 @@ module.exports = () => {
   // connect to BeanWorker
   const beanWorkerConfig = {
     id: 'bs_worker_1',
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     port: 11300,
     ignoreDefault: true,
   };
