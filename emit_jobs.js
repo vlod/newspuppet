@@ -14,7 +14,7 @@ const joblist = [
 ];
 
 const fivebeans = require('fivebeans');
-const emitter = new fivebeans.client('0.0.0.0', 11300);
+const emitter = new fivebeans.client('127.0.0.1', 11300);
 
 const doneEmittingJobs = () => {
   console.log('We reached our completion callback. Now closing down.');
