@@ -112,9 +112,7 @@ module.exports = (config) => {
       mkdirp(fullPathFeedDir)
         .then(() => {
           feedDirAlreadyCreated[feedDirNameHash] = true; // no point doing this all the time
-          return mkdirp(`${projectDir}/public/data/${feedDirNameHash}`);
-        })
-        .then(() => {
+
           const feedIdClean = feedUrl.replace(/http(s)*:\/+/, '').replace(/[\.\/]/g, '-');
 
           // create empty file to help find feeds
