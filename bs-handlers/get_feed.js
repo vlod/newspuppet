@@ -102,7 +102,7 @@ module.exports = (config) => {
   function _setupFeedDir(feedUrl) {
     return new Promise((resolve, reject) => {
       const feedDirNameHash = md5sum.digest(feedUrl); // eg 50cc46cbf0ad93502ea742c8e4008c52
-
+      console.log(`_setupFeedDir:${feedUrl} feedDirNameHash:${feedDirNameHash}`);
       // no point recreating feed directory as we've done it before
       if (feedDirAlreadyCreated[feedDirNameHash]) {
         return resolve(feedDirNameHash);
