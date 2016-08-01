@@ -1,6 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router';
 
-const Navbar = () => {
+const ACTIVE = { backgroundColor: 'green', color: 'white' };
+
+const Navbar = (props) => {
   return (
     <nav className="navbar navbar-inverse navbar-fixed-top">
       <div className="container-fluid">
@@ -17,14 +20,26 @@ const Navbar = () => {
           </button>
           <a className="navbar-brand" href="/">Newspuppet</a>
         </div>
-        <div id="navbar" className="navbar-collapse collapse">
-          <ul className="nav navbar-nav navbar-right">
-            <li><a href="#">Profile</a></li>
-          </ul>
+        <div className="visible-xs-block">
+          <div id="navbar" className="navbar-collapse collapse top-menu">
+            <ul className="nav navbar-nav navbar-right">
+              {props.categories.map(
+                (category) => <li key={category.id}>
+                  <Link to={`/category/${category.id}`} activeStyle={ACTIVE}>
+                    <span className="title">{category.name}</span>
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
       </div>
     </nav>
   );
+};
+
+Navbar.propTypes = {
+  categories: React.PropTypes.array.isRequired,
 };
 
 export default Navbar;

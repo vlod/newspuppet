@@ -11,7 +11,7 @@ const Sidebar = (props) => {
   }
 
   return (
-    <div className="sidebar">
+    <div className="sidebar hidden-xs">
       <ul className="nav nav-sidebar">
         {props.categories.map(
             (category) => <li key={category.id} className="entry">
