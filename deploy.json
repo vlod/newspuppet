@@ -1,0 +1,16 @@
+{
+  "server": "newspuppet.com",
+  "port": 30000,
+  "server_dir": "/var/www/newspuppet",
+  "repo": "git@github.com:vlod/newspuppet.git",
+  "prj_git_relative_dir": "",
+  "branch": "master",
+  "force_regenerate_git_dir": false,
+  "shared_dirs": [
+    "node_modules", "data"
+  ],
+  "prerun": [
+    "npm install", "npm run build", "npm testOnce"
+  ],
+  "run_cmd": "touch /var/www/newspuppet/current/tmp/restart.txt"
+}
