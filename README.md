@@ -13,6 +13,7 @@ Technologies used
 - Beanstalk (Event bus)
 - Webpack (For code assembly)
 - Mocha/Chai (Testing)
+- Bootstrap/Sass (CSS)
 - Docker (containers for beanstalk and rethinkdb)
 
 A demo version is available at: [http://www.newspuppet.com](http://www.newspuppet.com)
