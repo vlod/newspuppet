@@ -10,7 +10,7 @@
     "node_modules", "data"
   ],
   "prerun": [
-    "npm install", "npm run build", "npm testOnce"
+    "npm install", "npm run build", "npm run testOnce"
   ],
   "run_cmd": "touch /var/www/newspuppet/current/tmp/restart.txt"
 }
