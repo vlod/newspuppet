@@ -15,27 +15,43 @@ Technologies used
 - Mocha/Chai (Testing)
 - Docker (containers for beanstalk and rethinkdb)
 
-Installation
-------------
-npm i
+## Getting Started
+------------------
+Make sure you have rethinkdb and beanstalkd installed and running.
+There are docker images in $PROJECT_DIR/docker.
+[Docker-For-Mac](https://docs.docker.com/docker-for-mac/) is a great way to start with docker.
 
-Running
-------------
+    npm install # install npm modules
 
-For dev - run node in development mode (uses webpack-hot-middleware):
+    npm run dbSetup # deploy the db schema to rethinkdb
 
-    # rm -rf public/resources;  # only if you've previous run in production mode
+    node seed_data # populate with some feed links
+
+
+## Running
+----------
+
+For development (uses webpack-hot-middleware for hot reloading):
+
     npm run start
 
-For prod - generate the javascript files into /public with md5 hashes for css/js:
+
+For production build - generate the minimized javascript files into /public with md5 hashes for css/js:
 
     rm -f public/resources/*; npm run build; NODE_ENV=production npm run start
 
-Hit
 
-    http://127.0.0.1:3000/
+Hit [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
-Authors
+
+## Tests
+--------
+
+You can never have enough tests, but so far:
+
+    npm test
+
+## Author
 -------
 
 * **Vlod Kalicun** ([Twitter](https://twitter.com/vlod) / [GitHub](https://github.com/vlod))
