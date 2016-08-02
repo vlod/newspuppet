@@ -15,6 +15,7 @@ Technologies used
 - Mocha/Chai (Testing)
 - Docker (containers for beanstalk and rethinkdb)
 
+A demo version is available at: [http://www.newspuppet.com](http://www.newspuppet.com)
 ## Getting Started
 
 Make sure you have rethinkdb and beanstalkd installed and running.
