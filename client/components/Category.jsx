@@ -8,7 +8,7 @@ const Category = (props) => {
     return <div></div>;
   }
   return (
-    <div className="row category_page">
+    <div className="category_page">
       <div className="col-xs-11 col-sm-10 col-md-10 col-lg-10">
         <ul>
         {props.values.map((feed) => <Feed key={feed.id} feed={feed} snippetHandler={props.snippetHandler} />)}
