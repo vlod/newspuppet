@@ -29,6 +29,9 @@ app.use(helmet());
 // };
 let api500px;
 if (app.get('env') !== 'test') {
+  if (process.env.API500PX_CREDENTIALS === undefined) {
+    throw new Error('ERROR: API500PX_CREDENTIALS in env not found');
+  }
   const credentials500px = JSON.parse(process.env.API500PX_CREDENTIALS);
   const API500px = require('600px');
   api500px = new API500px(credentials500px);
