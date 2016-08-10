@@ -16,11 +16,11 @@ body {
     font-size:30px;
   }
   .mainContent {
-    margin-left:12px;
+    margin-left:0;
   }
   @media (min-width: $screen-sm) {
     .mainContent {
-      margin-left:145px;
+      margin-left:120px;
     }
   }
 }
