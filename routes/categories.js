@@ -8,7 +8,7 @@ const BASE_TEN_RADIX = 10; // for parseInt() https://goo.gl/5i2Fz
 function getFeedItemsFor(rdb, feedId, limit = 25) {
   return rdb.table('feed_items')
               .getAll(feedId, { index: 'feed_id' })
-              .pluck(['id', 'link', 'title', 'feed_id', 'pub_date', 'comments'])
+              .pluck(['id', 'link', 'title', 'feed_id', 'pub_date', 'comments', 'image_url'])
               .orderBy(rdb.desc('pub_date'))
               .limit(limit);
 }
@@ -32,7 +32,7 @@ router.get('/:id', (req, res /* , next */) => {
     .getField('feeds')
     .eqJoin((x) => x, rdb.table('feeds'), { ordered: true })
     .zip()
-    .pluck(['id', 'name', 'hash']) // only these fields from feeds
+    .pluck(['id', 'name', 'hash', 'type']) // only these fields from feeds
     .run()
       .then((feeds) => {
         // TODO: do we need to check that feeds has at least one valid entry?
@@ -61,8 +61,8 @@ router.get('/:id', (req, res /* , next */) => {
               // console.log('results: ', feedItems);
               for (const feedItem of feedItems) {
                 // only pull out the properties we want to send back
-                const { id, link, title, comments } = feedItem;
-                feedArticles[feedItem.feed_id].push({ id, link, title, comments });
+                const { id, link, title, comments, image_url } = feedItem;
+                feedArticles[feedItem.feed_id].push({ id, link, title, comments, image_url });
               }
               res.json({ status: 'ok', results: feeds });
             })

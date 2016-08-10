@@ -6,6 +6,7 @@ if (typeof(PhusionPassenger) !== 'undefined') {
   PhusionPassenger.configure({ autoInstall: false });
 }
 
+const fs = require('fs-extra-promise');
 const express = require('express');
 const path = require('path');
 // var favicon = require('serve-favicon');
@@ -14,16 +15,36 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const hoganExpress = require('hogan-express');
 const winston = require('winston');
-const mkdirp = require('mkdirp-promise');
 const chalk = require('chalk'); // https://github.com/chalk/chalk
 const helmet = require('helmet'); // https://github.com/helmetjs/helmet
 
 const app = express();
 app.use(helmet());
 
+
+// connect to 500px api endpoint
+// e.g. const credentials500px = {
+//   consumer_key: '123', consumer_secret: '456',
+//   token: '789', token_secret: '101112',
+// };
+let api500px;
+if (app.get('env') !== 'test') {
+  const credentials500px = JSON.parse(process.env.API500PX_CREDENTIALS);
+  const API500px = require('600px');
+  api500px = new API500px(credentials500px);
+
+  // api500px.photos.getPopular({ sort: 'highest_rating', rpp: '20' })
+  //     .then((results) => {
+  //       console.log(results);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+}
+
 // setup data directories
-mkdirp('./data')
-  .then(() => mkdirp('./public/data'))
+fs.mkdirsAsync('./data')
+  .then(() => fs.mkdirsAsync('./public/data'))
   .catch((err) => winston.error(`Error creating directories ${err}`));
 
 winston.info('connecting to beanstalkd');
@@ -41,11 +62,16 @@ dbUtils.setup(dbConfig.db, dbSchema);
 // setup beanstalkd
 if (app.get('env') !== 'test') {
   const beanstalkdConnector = require('./config/beanstalkdConnector')();
-  const workerConfig = ({ rdb: app.locals.rdb, emitter: beanstalkdConnector.emitter, projectDir: __dirname });
+  const workerConfig = ({ rdb: app.locals.rdb,
+                          emitter: beanstalkdConnector.emitter,
+                          projectDir: __dirname,
+                          api500px,
+                        });
 
   beanstalkdConnector.addHandlers({
     get_feed: require('./bs-handlers/get_feed')(workerConfig),
     load_feed: require('./bs-handlers/load_feed')(workerConfig),
+    get_feed_500px: require('./bs-handlers/get_feed_500px')(workerConfig),
   });
 }
 

@@ -1,7 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-const readFile = require('fs-readfile-promise');
+const fs = require('fs-extra-promise');
 const expect = require('chai').expect;
 // const uuid = require('node-uuid');
+// const v= uuid.v4();
 
 const loadFeed = require('../../bs-handlers/load_feed');
 const dbConfig = require('../../config/db.js');
@@ -18,7 +19,7 @@ describe('load_feed handler', () => {
   });
 
   it('returns the correct key value pairs for feed data', (done) => {
-    readFile(`${__dirname}/data/6df54be78bcaea7b6d402b4d78362bd8/feed.json`)
+    fs.readFileAsync(`${__dirname}/data/6df54be78bcaea7b6d402b4d78362bd8/feed.json`)
       .then((data) => loadFeed({ projectDir: `${__dirname}` })._processFeed(data))
       .then((entries) => {
         expect(entries.length).to.equal(30);
@@ -39,8 +40,25 @@ describe('load_feed handler', () => {
       .catch((err) => done(err));
   });
 
+  it('returns the correct key value pairs for feed image data', (done) => {
+    fs.readFileAsync(`${__dirname}/data/ddcb71544f186074e7827d8c14eea6ad/feed.json`)
+      .then((data) => loadFeed({ projectDir: `${__dirname}` })._processFeed(data))
+      .then((entries) => {
+        expect(entries.length).to.equal(20);
+
+        expect(entries[0].title).to.equal('Clarity');
+        expect(entries[0].link).to.equal('https://500px.com/photo/166435685/clarity-by-elia-locardi');
+        expect(entries[0].image_url).to.equal('https://drscdn.500px.org/photo/166435685/q%3D50_w%3D140_h%3D140/7e6f9e5dac7bdaca0e1177f50677e3af?v=3');
+        expect(new Date(entries[0].pub_date).getTime())
+          .to.equal(new Date('2016-08-05T08:23:42-04:00').getTime());
+
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
   it('returns articles expect those with bad links for feed data', (done) => {
-    readFile(`${__dirname}/data/missing_links/feed.json`)
+    fs.readFileAsync(`${__dirname}/data/missing_links/feed.json`)
       .then((data) => loadFeed({ projectDir: `${__dirname}` })._processFeed(data))
       .then((entries) => {
         expect(entries.length).to.equal(19); // has 20, but one has a bad link
@@ -57,7 +75,7 @@ describe('load_feed handler', () => {
   it('should return the correct feedItem ids', (done) => {
     const lf = loadFeed({ projectDir: `${__dirname}` });
 
-    readFile(`${__dirname}/data/6df54be78bcaea7b6d402b4d78362bd8/feed.json`)
+    fs.readFileAsync(`${__dirname}/data/6df54be78bcaea7b6d402b4d78362bd8/feed.json`)
       .then((data) => lf._processFeed(data))
       .then((entries) => {
         expect(entries.length).to.equal(30);
@@ -88,7 +106,7 @@ describe('load_feed handler', () => {
       .then((results) => {
         expect(results.errors).to.equal(0, 'error insering fixtures');
         expect(results.inserted).to.equal(2);
-        return readFile(`${__dirname}/data/6df54be78bcaea7b6d402b4d78362bd8/feed.json`);
+        return fs.readFileAsync(`${__dirname}/data/6df54be78bcaea7b6d402b4d78362bd8/feed.json`);
       })
       .then((data) => lf._processFeed(data))
       .then((entries) => {
@@ -152,6 +170,43 @@ describe('load_feed handler', () => {
               expect(feedItems[0].link).to.equal('http://arstechnica.com/staff/2016/07/welcome-to-the-new-new-ars-technica/');
 
               expect(feedItems[19].title).to.equal('SpaceX in 2016: Launching more with a better rocket that it can land [Updated]');
+              expect(feedItems[0].feed_id).to.equal(feedId);
+              return;
+            });
+        });
+      })
+      .then(() => done())
+      .catch((err) => done(err));
+  });
+
+  it('should insert new articles from images feed', (done) => {
+    const lf = loadFeed({ projectDir: `${__dirname}`, rdb });
+    const feedId = 'da8cee9d03b4489cac33-b6ed69197870';
+    const feedFixtures = {
+      id: feedId,
+      name: '500px Popular',
+      url: 'https://api.500px.com/v1/photos',
+    };
+     // clean up old values in table
+    rdb.table('feeds').get(feedId).delete().run()
+      .then(() => rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).delete().run())
+      .then(() => rdb.table('feeds').insert(feedFixtures).run())
+      .then(() => {
+        lf.work({ feedId }, (mesg) => {
+          expect(mesg).to.equal('success');
+
+          // pull in everything to verify
+          rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).orderBy(rdb.desc('pub_date')).run()
+            .then((feedItems) => {
+              expect(feedItems.length).to.equal(20);
+              expect(feedItems[0].title).to.equal('Sparks Lake');
+              expect(feedItems[0].feed_id).to.equal(feedId);
+              expect(feedItems[0].link).to.equal('https://500px.com/photo/166924739/sparks-lake-by-%C4%B0lhan-eroglu');
+              expect(feedItems[0].image_url).to.equal('https://drscdn.500px.org/photo/166924739/q%3D50_w%3D140_h%3D140/724c793e59cb3d4b21b6181e36cb231c?v=3');
+              expect(new Date(feedItems[0].pub_date).getTime())
+                        .to.equal(new Date('2016-08-08T14:57:00-04:00').getTime());
+
+              expect(feedItems[19].title).to.equal('Dream');
               expect(feedItems[0].feed_id).to.equal(feedId);
               return;
             });

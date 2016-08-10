@@ -1,5 +1,6 @@
 /* eslint-disable max-len, no-underscore-dangle */
-const readFile = require('fs-readfile-promise');
+const fs = require('fs-extra-promise');
+
 const winston = require('winston');
 const md5sum = require('../lib/md5sum');
 
@@ -24,6 +25,8 @@ module.exports = (config) => {
           };
           // if it has comments add it
           if (item.comments) newValue.comments = item.comments;
+          // if it has an image add it
+          if (item.image_url) newValue.image_url = item.image_url;
 
           results.push(newValue);
         }
@@ -87,7 +90,7 @@ module.exports = (config) => {
         md5Digest = md5sum.digest(feed.url);
 
         const fileName = `${projectDir}/data/${md5Digest}/feed.json`;
-        return readFile(fileName);
+        return fs.readFileAsync(fileName);
       })
       .then((data) => _processFeed(data))
 

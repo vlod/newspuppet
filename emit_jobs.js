@@ -11,6 +11,10 @@ const joblist = [
   { type: 'get_feed', payload: { feedId: 8 } }, // ReadWrite
   { type: 'get_feed', payload: { feedId: 9 } }, // TheNextWeb
   { type: 'get_feed', payload: { feedId: 10 } }, // TheVerge
+  { type: 'get_feed_500px', payload: { feedId: 11 } }, // 500px
+  { type: 'get_feed', payload: { feedId: 12 } }, // recode
+
+  // { type: 'load_feed', payload: { feedId: 11 } },
 ];
 
 const fivebeans = require('fivebeans');

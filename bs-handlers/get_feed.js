@@ -1,14 +1,14 @@
 /* eslint-disable no-underscore-dangle */
-const fs = require('fs');
+const fs = require('fs-extra-promise');
 const FeedParser = require('feedparser');
 const request = require('request');
 const winston = require('winston');
 const Iconv = require('iconv').Iconv;
-// const fivebeans = require('fivebeans');
-const mkdirp = require('mkdirp-promise');
-const md5sum = require('../lib/md5sum');
+const handlersCommon = require('./handlers_common');
 
-const feedDirAlreadyCreated = {};
+// const fivebeans = require('fivebeans');
+
+// const feedDirAlreadyCreated = {};
 
 module.exports = (config) => {
   const { rdb, emitter, projectDir } = config;
@@ -99,41 +99,41 @@ module.exports = (config) => {
     });
   }
 
-  function _setupFeedDir(feedUrl) {
-    return new Promise((resolve, reject) => {
-      const feedDirNameHash = md5sum.digest(feedUrl); // eg 50cc46cbf0ad93502ea742c8e4008c52
+  // function _setupFeedDir(feedUrl) {
+  //   return new Promise((resolve, reject) => {
+  //     const feedDirNameHash = md5sum.digest(feedUrl); // eg 50cc46cbf0ad93502ea742c8e4008c52
 
-      // no point recreating feed directory as we've done it before
-      if (feedDirAlreadyCreated[feedDirNameHash]) {
-        return resolve(feedDirNameHash);
-      }
+  //     // no point recreating feed directory as we've done it before
+  //     if (feedDirAlreadyCreated[feedDirNameHash]) {
+  //       return resolve(feedDirNameHash);
+  //     }
 
-      const fullPathFeedDir = `${projectDir}/data/${feedDirNameHash}`;
-      mkdirp(fullPathFeedDir)
-        .then(() => {
-          feedDirAlreadyCreated[feedDirNameHash] = true; // no point doing this all the time
+  //     const fullPathFeedDir = `${projectDir}/data/${feedDirNameHash}`;
+  //     fs.mkdirsAsync(fullPathFeedDir)
+  //       .then(() => {
+  //         feedDirAlreadyCreated[feedDirNameHash] = true; // no point doing this all the time
 
-          const feedIdClean = feedUrl.replace(/http(s)*:\/+/, '').replace(/[\.\/]/g, '-');
+  //         const feedIdClean = feedUrl.replace(/http(s)*:\/+/, '').replace(/[\.\/]/g, '-');
 
-          // create empty file to help find feeds
-          fs.closeSync(fs.openSync(`${fullPathFeedDir}/FEED_${feedIdClean}`, 'w'));
+  //         // create empty file to help find feeds
+  //         fs.closeSync(fs.openSync(`${fullPathFeedDir}/FEED_${feedIdClean}`, 'w'));
 
-          resolve(feedDirNameHash);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+  //         resolve(feedDirNameHash);
+  //       })
+  //       .catch((err) => {
+  //         reject(err);
+  //       });
 
-      return true;
-    });
-  }
+  //     return true;
+  //   });
+  // }
 
   return {
-    _updateFeedDirCreatedCache: (feedDirNameHash, value) => {
-      feedDirAlreadyCreated[feedDirNameHash] = value;
-    },
+    // _updateFeedDirCreatedCache: (feedDirNameHash, value) => {
+    //   feedDirAlreadyCreated[feedDirNameHash] = value;
+    // },
     _downloadFeed,
-    _setupFeedDir,
+    // _setupFeedDir,
     work: (payload, callback) => {
       let feedUrl;
 
@@ -143,7 +143,7 @@ module.exports = (config) => {
           feedUrl = results.url;
           winston.info('GET_FEED:', { feedId: payload.feedId, feedUrl });
 
-          _setupFeedDir(feedUrl)
+          handlersCommon.setupFeedDir(projectDir, feedUrl)
             .then((feedDirName) => _downloadFeed({ feedId: payload.feedId, url: feedUrl, md5: feedDirName }))
             .then(() => {
               // emit LOAD_FEED
