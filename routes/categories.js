@@ -27,8 +27,16 @@ router.get('/:id', (req, res /* , next */) => {
   const rdb = req.app.locals.rdb;
   const categoryId = req.params.id;
 
+  let categoriesRQL = rdb.table('categories');
+  if (categoryId === 'home') {
+    categoriesRQL = categoriesRQL.orderBy(rdb.asc('priority')).nth(0);
+  }
+  else {
+    categoriesRQL = categoriesRQL.get(parseInt(categoryId, BASE_TEN_RADIX));
+  }
+
   // pull category feed info
-  rdb.table('categories').get(parseInt(categoryId, BASE_TEN_RADIX))
+  categoriesRQL
     .getField('feeds')
     .eqJoin((x) => x, rdb.table('feeds'), { ordered: true })
     .zip()

@@ -18,7 +18,7 @@ const Navbar = (props) => {
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
           </button>
-          <a className="navbar-brand" href="/">Newspuppet</a>
+          <Link to="/" className="navbar-brand">Newspuppet</Link>
         </div>
         <div className="visible-xs-block">
           <div id="navbar" className="navbar-collapse collapse top-menu">

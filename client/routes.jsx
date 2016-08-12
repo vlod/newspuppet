@@ -4,7 +4,7 @@ import { Route, IndexRoute } from 'react-router';
 
 import App from './containers/App';
 // import Sidebar from './components/Sidebar';
-import Home from './components/Home';
+import Home from './containers/Home';
 import CategoryContainer from './containers/Category';
 
 export default (

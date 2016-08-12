@@ -11,8 +11,11 @@ describe('categories route:', () => {
   const feedFixtures = [
     { id: 2, hash: '50cc46cbf0ad93502ea742c8e4008c52', name: 'BBC news', url: 'http://feeds.bbci.co.uk/news/technology/rss.xml', downloadable: true },
     { id: 3, hash: '85b0809277cb6106e362a0371d26e68a', name: 'Washington Post', url: ' http://feeds.washingtonpost.com/rss/national' },
+    { id: 5, hash: '1b9e1665491d16402eed265c92aec827', name: 'Ars Technica', url: 'http://arstechnica.com/feed/', downloadable: true },
+    { id: 6, hash: 'f011fadb7cbaf9f96d7be5482ccbddc8', name: 'Engadget', url: ' https://www.engadget.com/rss.xml' },
   ];
   const categoriesFixtures = [
+    { id: 1, name: 'Wen', priority: 2, feeds: [5, 6] },
     { id: 2, name: 'Headline News', priority: 1, feeds: [2, 3] },
   ];
   before((done) => {
@@ -36,7 +39,7 @@ describe('categories route:', () => {
     .expect((res) => {
       const body = res.body;
       // console.log(body);
-      expect(body.length).to.equal(1, 'should just return 1 category');
+      expect(body.length).to.equal(2, 'should just return 2 category');
 
       expect(body[0].name).to.equal('Headline News');
       expect(body[0].id).to.equal(2);
@@ -53,6 +56,30 @@ describe('categories route:', () => {
   it('should get feeds for a specific category', (done) => {
     request(server)
       .get('/categories/2')
+      .expect(200)
+      .expect((res) => {
+        // console.log(`body: ${JSON.stringify(res.body)}`);
+        expect(res.body.status).to.equal('ok');
+
+        const results = res.body.results;
+        expect(results.length).to.equal(2, 'should just return 2 feeds for this category');
+
+        expect(results[0].name).to.equal('BBC news');
+        expect(results[0].id).to.equal(2);
+        expect(results[0].hash).to.equal('50cc46cbf0ad93502ea742c8e4008c52');
+        expect(results[1].name).to.equal('Washington Post');
+        expect(results[1].id).to.equal(3);
+        expect(results[1].hash).to.equal('85b0809277cb6106e362a0371d26e68a');
+        return done();
+      })
+      .end((err) => {
+        if (err) done(err);
+      });
+  });
+
+  it('should get feeds for the home category', (done) => {
+    request(server)
+      .get('/categories/home') // will get first priority:1 category
       .expect(200)
       .expect((res) => {
         // console.log(`body: ${JSON.stringify(res.body)}`);
