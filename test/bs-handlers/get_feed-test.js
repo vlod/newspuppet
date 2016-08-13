@@ -10,42 +10,6 @@ const FEED_URL = 'http://feeds.bbci.co.uk/news/technology/rss.xml';
 // const workerConfig = ({ projectDir: '/tmp/newspuppet_test' });
 
 describe('get_feed handler', () => {
-  // it('creates directories for feed', (done) => {
-  //   const feedDir = '/tmp/newspuppet_test/data/50cc46cbf0ad93502ea742c8e4008c52';
-
-  //   const beanstalkWorker = getFeed(workerConfig);
-  //   // clean up old feed directory
-  //   fs.removeAsync('/tmp/newspuppet_test')
-  //     .then(() => beanstalkWorker._setupFeedDir(FEED_URL))
-  //     .then((feedDirName) => {
-  //       // make sure this hash is what we expect
-  //       expect(feedDirName).to.equal('50cc46cbf0ad93502ea742c8e4008c52');
-  //       return pathExists(feedDir);
-  //     })
-  //     .then((exists) => {
-  //       expect(exists).to.equal(true); // main feed download area path setup
-  //       return pathExists(`${feedDir}/FEED_feeds-bbci-co-uk-news-technology-rss-xml`);
-  //     })
-  //     .then((exists) => {
-  //       expect(exists).to.equal(true); // feed indicator file
-  //       done();
-  //     })
-  //     .catch((err) => done(err));
-  // });
-
-  // it('should return correct hash even if feed directory exists', (done) => {
-  //   const beanstalkWorker = getFeed(workerConfig);
-  //   // tell the cache its already been loaded
-  //   beanstalkWorker._updateFeedDirCreatedCache('50cc46cbf0ad93502ea742c8e4008c52', true);
-  //   beanstalkWorker._setupFeedDir(FEED_URL)
-  //     .then((feedDirName) => {
-  //       // make sure this hash is what we expect
-  //       expect(feedDirName).to.equal('50cc46cbf0ad93502ea742c8e4008c52');
-  //       done();
-  //     })
-  //     .catch((err) => done(err));
-  // });
-
   it('should download the xml and json files', (done) => {
     // stub feed lookup
     nock('http://feeds.bbci.co.uk')

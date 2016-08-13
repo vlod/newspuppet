@@ -99,41 +99,8 @@ module.exports = (config) => {
     });
   }
 
-  // function _setupFeedDir(feedUrl) {
-  //   return new Promise((resolve, reject) => {
-  //     const feedDirNameHash = md5sum.digest(feedUrl); // eg 50cc46cbf0ad93502ea742c8e4008c52
-
-  //     // no point recreating feed directory as we've done it before
-  //     if (feedDirAlreadyCreated[feedDirNameHash]) {
-  //       return resolve(feedDirNameHash);
-  //     }
-
-  //     const fullPathFeedDir = `${projectDir}/data/${feedDirNameHash}`;
-  //     fs.mkdirsAsync(fullPathFeedDir)
-  //       .then(() => {
-  //         feedDirAlreadyCreated[feedDirNameHash] = true; // no point doing this all the time
-
-  //         const feedIdClean = feedUrl.replace(/http(s)*:\/+/, '').replace(/[\.\/]/g, '-');
-
-  //         // create empty file to help find feeds
-  //         fs.closeSync(fs.openSync(`${fullPathFeedDir}/FEED_${feedIdClean}`, 'w'));
-
-  //         resolve(feedDirNameHash);
-  //       })
-  //       .catch((err) => {
-  //         reject(err);
-  //       });
-
-  //     return true;
-  //   });
-  // }
-
   return {
-    // _updateFeedDirCreatedCache: (feedDirNameHash, value) => {
-    //   feedDirAlreadyCreated[feedDirNameHash] = value;
-    // },
     _downloadFeed,
-    // _setupFeedDir,
     work: (payload, callback) => {
       let feedUrl;
 

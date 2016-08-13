@@ -21,7 +21,6 @@ const helmet = require('helmet'); // https://github.com/helmetjs/helmet
 const app = express();
 app.use(helmet());
 
-
 // connect to 500px api endpoint
 // e.g. const credentials500px = {
 //   consumer_key: '123', consumer_secret: '456',
@@ -35,15 +34,18 @@ if (app.get('env') !== 'test') {
   const credentials500px = JSON.parse(process.env.API500PX_CREDENTIALS);
   const API500px = require('600px');
   api500px = new API500px(credentials500px);
-
-  // api500px.photos.getPopular({ sort: 'highest_rating', rpp: '20' })
-  //     .then((results) => {
-  //       console.log(results);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
 }
+
+// connect to flickr api endpoint and return it as a promise
+if (process.env.FLICKR_API_KEY === undefined) {
+  throw new Error('ERROR: FLICKR_API_KEY in env not found');
+}
+const Flickr = require('flickrapi');
+const flickrAPI = new Promise((resolve, reject) => {
+  Flickr.tokenOnly({ api_key: process.env.FLICKR_API_KEY }, (err, flickr) => {
+    return err === null ? resolve(flickr) : reject(err);
+  });
+});
 
 // setup data directories
 fs.mkdirsAsync('./data')
@@ -69,12 +71,14 @@ if (app.get('env') !== 'test') {
                           emitter: beanstalkdConnector.emitter,
                           projectDir: __dirname,
                           api500px,
+                          flickrAPI,
                         });
 
   beanstalkdConnector.addHandlers({
     get_feed: require('./bs-handlers/get_feed')(workerConfig),
     load_feed: require('./bs-handlers/load_feed')(workerConfig),
     get_feed_500px: require('./bs-handlers/get_feed_500px')(workerConfig),
+    get_feed_flickr: require('./bs-handlers/get_feed_flickr')(workerConfig),
   });
 }
 

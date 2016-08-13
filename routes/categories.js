@@ -5,7 +5,7 @@ const router = express.Router();
 
 const BASE_TEN_RADIX = 10; // for parseInt() https://goo.gl/5i2Fz
 
-function getFeedItemsFor(rdb, feedId, limit = 25) {
+function getFeedItemsFor(rdb, feedId, limit = 24) {
   return rdb.table('feed_items')
               .getAll(feedId, { index: 'feed_id' })
               .pluck(['id', 'link', 'title', 'feed_id', 'pub_date', 'comments', 'image_url'])

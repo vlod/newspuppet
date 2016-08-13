@@ -36,6 +36,7 @@ const Feed = (props) => {
         {feed.articles.map((article) => ItemSelector(feed, article))}
         </ul>
       </div>
+      <div className="clearfix" />
     </div>
   );
 };

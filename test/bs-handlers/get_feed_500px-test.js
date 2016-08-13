@@ -3,52 +3,10 @@ const expect = require('chai').expect;
 const fs = require('fs-extra-promise');
 const pathExists = require('path-exists');
 
-// const nock = require('nock');
-
 const getFeed = require('../../bs-handlers/get_feed_500px');
 const FEED_URL = 'https://api.500px.com/v1/photos';
-// const workerConfig = ({ projectDir: '/tmp/newspuppet_test' });
 
 describe('get_feed_500px handler', () => {
-  // it('creates directories for 500px feed', (done) => {
-  //   const feedDir = '/tmp/newspuppet_test/data/ddcb71544f186074e7827d8c14eea6ad';
-
-  //   const beanstalkWorker = getFeed(workerConfig);
-  //   // clean up old feed directory
-  //   fs.removeAsync('/tmp/newspuppet_test')
-  //     .then(() => beanstalkWorker._setupFeedDir(FEED_URL))
-  //     .then((feedDirName) => {
-  //       // make sure this hash is what we expect
-  //       expect(feedDirName).to.equal('ddcb71544f186074e7827d8c14eea6ad');
-  //       return pathExists(feedDir);
-  //     })
-  //     .then((exists) => {
-  //       expect(exists).to.equal(true); // main feed download area path setup
-  //       return pathExists(`${feedDir}/FEED_api-500px-com-v1-photos`);
-  //     })
-  //     .then((exists) => {
-  //       expect(exists).to.equal(true); // feed indicator file
-  //     })
-  //     .then(() => done())
-  //     .catch((err) => done(err));
-  // });
-
-  // it('should return correct hash even if feed directory exists', (done) => {
-  //   const beanstalkWorker = getFeed(workerConfig);
-  //   // tell the cache its already been loaded
-  //   beanstalkWorker._updateFeedDirCreatedCache('ddcb71544f186074e7827d8c14eea6ad', true);
-  //   beanstalkWorker._setupFeedDir(FEED_URL)
-  //     .then((feedDirName) => {
-  //       // make sure this hash is what we expect
-  //       expect(feedDirName).to.equal('ddcb71544f186074e7827d8c14eea6ad');
-  //       done();
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //       done(err);
-  //     });
-  // });
-
   it('should download the feed file and generate json files', (done) => {
     // mock out api500px
     const api500px = {
