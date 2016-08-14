@@ -4,6 +4,9 @@
 .category_page {
   h3 {
     color:$baseTextColor;
+    a {
+      color:$baseTextColor;
+    }
   }
   .feed {
     padding-left:10px;
