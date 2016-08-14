@@ -23,6 +23,7 @@ const data = [
   { id: 11, type: 'IMAGE', name: '500px Popular', url: 'https://api.500px.com/v1/photos', site_url: 'https://500px.com/popular', icon: 'https://assetcdn.500px.org/assets/favicon-7d8942fba5c5649f91a595d0fc749c83.ico' },
   { id: 12, type: 'TEXT', name: 'recode', url: 'http://www.recode.net/rss/index.xml', site_url: 'http://www.recode.net', icon: 'https://cdn0.vox-cdn.com/uploads/chorus_asset/file/6397031/recode_favicon-64.0.png' },
   { id: 13, type: 'IMAGE', name: 'Flickr Interesting', url: 'https://api.flickr.com/services/rest/?method=flickr.interestingness.getList', site_url: 'https://www.flickr.com/explore', icon: 'https://www.flickr.com/apple-touch-icon.png' },
+  { id: 14, type: 'TEXT', name: 'Lifehacker', url: 'http://feeds.gawker.com/lifehacker/full', site_url: 'http://lifehacker.com', icon: 'https://i.kinja-img.com/gawker-media/image/upload/s--N2eqEvT8--/c_fill,fl_progressive,g_center,h_80,q_80,w_80/u0939doeuioaqhspkjyc.png' },
 ];
 // add hash
 for (const entry of data) {
@@ -39,7 +40,8 @@ dbSeed.run(dbConfig.db, 'categories', [
   { id: 2, name: 'Headline News', feeds: [2, 3], priority: 1 },
   { id: 3, name: 'Tech', feeds: [4, 6, 5], priority: 3 },
   { id: 4, name: 'Web', feeds: [10, 8, 9, 12], priority: 4 },
-  { id: 5, name: 'Photos', feeds: [11, 13], priority: 5 },
+  { id: 5, name: 'Photos', feeds: [11, 13], priority: 6 },
+  { id: 6, name: 'Productivity', feeds: [14], priority: 5 },
 ], (results) => {
   winston.info(`results: ${JSON.stringify(results)}`);
   rdb.getPoolMaster().drain();
