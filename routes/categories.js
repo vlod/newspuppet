@@ -40,7 +40,7 @@ router.get('/:id', (req, res /* , next */) => {
     .getField('feeds')
     .eqJoin((x) => x, rdb.table('feeds'), { ordered: true })
     .zip()
-    .pluck(['id', 'name', 'hash', 'type']) // only these fields from feeds
+    .pluck(['id', 'name', 'hash', 'type', 'site_url', 'icon']) // only these fields from feeds
     .run()
       .then((feeds) => {
         // TODO: do we need to check that feeds has at least one valid entry?

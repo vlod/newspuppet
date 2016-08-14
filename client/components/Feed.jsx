@@ -30,7 +30,9 @@ const Feed = (props) => {
   const { feed } = props;
   return (
     <div className="feed">
-      <h3>{feed.name}</h3>
+      <h3>
+        <a target="_blank" href={feed.site_url}><img src={feed.icon} width="26" height="26" alt="icon" className="feedIcon" />{feed.name}</a>
+      </h3>
       <div className="articles">
         <ul>
         {feed.articles.map((article) => ItemSelector(feed, article))}
