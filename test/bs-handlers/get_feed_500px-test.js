@@ -1,9 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-const expect = require('chai').expect;
-const fs = require('fs-extra-promise');
-const pathExists = require('path-exists');
+import fs from 'fs-extra-promise';
+import pathExists from 'path-exists';
 
-const getFeed = require('../../bs-handlers/get_feed_500px');
+import getFeed from '../../bs-handlers/get_feed_500px';
 const FEED_URL = 'https://api.500px.com/v1/photos';
 
 describe('get_feed_500px handler', () => {

@@ -6,7 +6,7 @@ const flickrInterestingness = require('../lib/flickr-interestingness-promise');
 
 module.exports = (config) => {
   const { flickrAPI, emitter, projectDir, rdb } = config;
-  this.type = 'get_feed_flickr';
+  const type = 'get_feed_flickr';
 
   function _downloadFeed(data) {
     const feedFileDirName = `${projectDir}/data/${data.md5}`;

@@ -12,7 +12,7 @@ const handlersCommon = require('./handlers_common');
 
 module.exports = (config) => {
   const { rdb, emitter, projectDir } = config;
-  this.type = 'get_feed';
+  const type = 'get_feed';
 
   // from: https://github.com/danmactough/node-feedparser/blob/master/examples/iconv.js
   function maybeTranslate(res, charset) {

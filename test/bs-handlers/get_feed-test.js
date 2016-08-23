@@ -1,11 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-const expect = require('chai').expect;
+import fs from 'fs-extra-promise';
+import pathExists from 'path-exists';
+import nock from 'nock';
 
-const fs = require('fs-extra-promise');
-const pathExists = require('path-exists');
-const nock = require('nock');
-
-const getFeed = require('../../bs-handlers/get_feed');
+import getFeed from '../../bs-handlers/get_feed';
 const FEED_URL = 'http://feeds.bbci.co.uk/news/technology/rss.xml';
 // const workerConfig = ({ projectDir: '/tmp/newspuppet_test' });
 

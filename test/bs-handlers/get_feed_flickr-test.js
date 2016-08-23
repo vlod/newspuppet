@@ -1,9 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-const expect = require('chai').expect;
-const fs = require('fs-extra-promise');
-const pathExists = require('path-exists');
+import fs from 'fs-extra-promise';
+import pathExists from 'path-exists';
 
-const getFeed = require('../../bs-handlers/get_feed_flickr');
+import getFeed from '../../bs-handlers/get_feed_flickr';
 const FEED_URL = 'https://api.flickr.com/services/rest/?method=flickr.interestingness.getList';
 
 describe('get_feed_flicker handler', () => {

@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
-const fs = require('fs-extra-promise');
-const expect = require('chai').expect;
+import fs from 'fs-extra-promise';
 // const uuid = require('node-uuid');
 // const v= uuid.v4();
 
-const loadFeed = require('../../bs-handlers/load_feed');
-const dbConfig = require('../../config/db.js');
+import loadFeed from '../../bs-handlers/load_feed';
+import dbConfig from '../../config/db.js';
 dbConfig.db = `${dbConfig.dbName}_${process.env.NODE_ENV}`;
-const rdb = require('rethinkdbdash')(dbConfig);
+import rethinkdbdash from 'rethinkdbdash';
+const rdb = rethinkdbdash(dbConfig);
 
 describe('load_feed handler', () => {
   before((done) => {

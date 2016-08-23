@@ -6,7 +6,7 @@ const md5sum = require('../lib/md5sum');
 
 module.exports = (config) => {
   const { rdb, emitter, projectDir } = config;
-  this.type = 'load_feed';
+  const type = 'load_feed';
 
   function _processFeed(data) {
     const feedContents = JSON.parse(data);

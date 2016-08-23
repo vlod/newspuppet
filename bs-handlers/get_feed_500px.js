@@ -5,7 +5,7 @@ const handlersCommon = require('./handlers_common');
 
 module.exports = (config) => {
   const { api500px, emitter, projectDir, rdb } = config;
-  this.type = 'get_feed_500px';
+  const type = 'get_feed_500px';
 
   function _downloadFeed(data) {
     const feedFileDirName = `${projectDir}/data/${data.md5}`;
