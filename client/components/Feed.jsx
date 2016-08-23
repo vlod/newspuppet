@@ -31,7 +31,7 @@ const Feed = (props) => {
   return (
     <div className="feed">
       <h3>
-        <a target="_blank" href={feed.site_url}><img src={feed.icon} width="26" height="26" alt="icon" className="feedIcon" />{feed.name}</a>
+        <a target="_blank" href={feed.site_url}><img src={`/favicons/${feed.hash}.png`} width="26" height="26" alt="icon" className="feedIcon" />{feed.name}</a>
       </h3>
       <div className="articles">
         <ul>
@@ -46,7 +46,6 @@ Feed.propTypes = {
   feed: React.PropTypes.shape({
     name: React.PropTypes.string.isRequired,
     site_url: React.PropTypes.string.isRequired,
-    icon: React.PropTypes.string.isRequired,
     articles: React.PropTypes.arrayOf(React.PropTypes.shape({
       id: React.PropTypes.string.isRequired,
       link: React.PropTypes.string.isRequired,
