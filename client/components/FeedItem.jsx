@@ -10,11 +10,9 @@ const FeedItem = (props) => {
 };
 FeedItem.propTypes = {
   id: React.PropTypes.string.isRequired,
-  snippetHandler: React.PropTypes.func,
   link: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
   comments: React.PropTypes.string,
-  feedHash: React.PropTypes.string.isRequired,
 };
 
 export default FeedItem;

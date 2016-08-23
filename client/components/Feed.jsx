@@ -43,7 +43,19 @@ const Feed = (props) => {
   );
 };
 Feed.propTypes = {
-  feed: React.PropTypes.object.isRequired,
+  feed: React.PropTypes.shape({
+    name: React.PropTypes.string.isRequired,
+    site_url: React.PropTypes.string.isRequired,
+    icon: React.PropTypes.string.isRequired,
+    articles: React.PropTypes.arrayOf(React.PropTypes.shape({
+      id: React.PropTypes.string.isRequired,
+      link: React.PropTypes.string.isRequired,
+      title: React.PropTypes.string.isRequired,
+      image_url: React.PropTypes.string,
+      comments: React.PropTypes.string,
+      hash: React.PropTypes.string,
+    })).isRequired,
+  }),
   snippetHandler: React.PropTypes.func,
 };
 
