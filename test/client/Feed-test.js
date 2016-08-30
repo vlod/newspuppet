@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 import Feed from '../../client/components/Feed';
 
 describe('<Feed />', () => {
-  it.only('renders feed icon correctly', () => {
+  it('renders feed icon correctly', () => {
     const wrapper = shallow(
       <Feed
         key="2"
