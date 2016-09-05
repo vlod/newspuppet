@@ -17,6 +17,8 @@ const hoganExpress = require('hogan-express');
 const winston = require('winston');
 const chalk = require('chalk'); // https://github.com/chalk/chalk
 const helmet = require('helmet'); // https://github.com/helmetjs/helmet
+const Category = require('./models/category');
+const router = require('./routes');
 
 const app = express();
 app.use(helmet());
@@ -47,17 +49,25 @@ const flickrAPI = new Promise((resolve, reject) => {
   });
 });
 
-// setup data directories
-fs.mkdirsAsync('./data')
-  .then(() => fs.mkdirsAsync('./public/data'))
-  .catch((err) => winston.error(`Error creating directories ${err}`));
-
-winston.info('connecting to beanstalkd');
-
 // connect to rethinkdb and store connection in app
 const dbConfig = require(`${__dirname}/config/db.js`);
 dbConfig.db = `${dbConfig.dbName}_${app.get('env')}`; // i.e. newspuppet_development
 app.locals.rdb = require('rethinkdbdash')(dbConfig);
+
+// set up category caching
+fs.mkdirsAsync('./data')
+  .then(() => fs.removeAsync('./public/categories'))
+  .then(() => new Promise((resolve, reject) => {
+    if (app.get('env') !== 'production') return resolve();
+    // for production cache
+    return fs.mkdirsAsync('./public/categories')
+              .then(() => Category.all(app.locals.rdb))
+              .then((categories) => fs.writeFileAsync('./public/categories/index.json', JSON.stringify(categories)))
+              .catch((err) => reject(err));
+  }))
+  .catch((err) => {
+    throw err;
+  });
 
 // create db, tables and indexes
 const dbSchema = require(`${__dirname}/config/dbSchema`);
@@ -65,6 +75,7 @@ const dbUtils = require('./utils/db')(app.locals.rdb);
 dbUtils.setup(dbConfig.db, dbSchema);
 
 // setup beanstalkd
+winston.info('connecting to beanstalkd');
 if (app.get('env') !== 'test') {
   const beanstalkdConnector = require('./config/beanstalkdConnector')();
   const workerConfig = ({ rdb: app.locals.rdb,
@@ -79,11 +90,12 @@ if (app.get('env') !== 'test') {
     load_feed: require('./bs-handlers/load_feed')(workerConfig),
     get_feed_500px: require('./bs-handlers/get_feed_500px')(workerConfig),
     get_feed_flickr: require('./bs-handlers/get_feed_flickr')(workerConfig),
+    cache_category: require('./bs-handlers/cache_category')(workerConfig),
+    cache_categories: require('./bs-handlers/cache_categories')(workerConfig),
   });
 }
 
-const routes = require('./routes/index');
-const categories = require('./routes/categories');
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -104,23 +116,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-// IMPORTANT: handle routes in the front end. see react-router https://goo.gl/1CZMd8
-// i.e. handle every other route with index.html (search: Configuring Your Server
-// TODO: should figure out a better way.. at least autogenerate it.
+app.use(router);
 
-// frontend
-app.use('/', routes);
-app.use('/home', routes);
-app.use('/category/:id', routes);
-
-// backend
-app.use('/categories', categories);
-
-if (app.get('env') === 'development') {
-  app.get('*', routes);
-}
+app.use(express.static('public'));
 
 const serverModeMessage = `Server running in NODE_ENV: ${app.get('env')}`;
 winston.info(app.get('env') === 'production' ? chalk.white.bgRed.bold(serverModeMessage) : chalk.white.bgBlue.bold(serverModeMessage));

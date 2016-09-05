@@ -15,7 +15,7 @@ const joblist = [
   { type: 'get_feed', payload: { feedId: 12 } }, // recode
   { type: 'get_feed_flickr', payload: { feedId: 13 } }, // flickr
   { type: 'get_feed', payload: { feedId: 14 } }, // lifehacker
-  // { type: 'load_feed', payload: { feedId: 11 } },
+  { type: 'cache_categories', payload: {} },
 ];
 
 const fivebeans = require('fivebeans');

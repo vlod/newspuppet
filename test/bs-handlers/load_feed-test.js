@@ -1,4 +1,6 @@
 /* eslint-disable no-underscore-dangle */
+/* global expect */
+
 import fs from 'fs-extra-promise';
 // const uuid = require('node-uuid');
 // const v= uuid.v4();
@@ -10,13 +12,18 @@ import rethinkdbdash from 'rethinkdbdash';
 const rdb = rethinkdbdash(dbConfig);
 
 describe('load_feed handler', () => {
+  function cleanTables() {
+    return rdb.table('feed_items').delete().run()
+              .then(() => rdb.table('feeds').delete().run());
+  }
   before((done) => {
-    rdb.table('feed_items').delete().run()
+    cleanTables()
       .then((results) => {
         expect(results.errors).to.equal(0, 'error cleaning feed_items');
         done();
       });
   });
+  after((done) => cleanTables().then(() => done()).catch((err) => done(err)));
 
   it('returns the correct key value pairs for feed data', (done) => {
     fs.readFileAsync(`${__dirname}/data/6df54be78bcaea7b6d402b4d78362bd8/feed.json`)
@@ -93,16 +100,15 @@ describe('load_feed handler', () => {
   it('should insert correctly', (done) => {
     const lf = loadFeed({ projectDir: `${__dirname}`, rdb });
     const feedId = 'b65d537b-6479-4ced-9c49-e5a4104f2b98';
-    const fixtures = [
+    const feedItemFixtures = [
       { id: '462a26429cccd399cd57b0a4af30919a', feed_id: feedId },
       { id: '70aa5ebdb4d5137842aa0b70eeb7f3b9', feed_id: feedId },
     ];
 
     // clean up old values in table
-    rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).delete()
-                           .run()
+    rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).delete().run()
       // insert fixtures data into table
-      .then(() => rdb.table('feed_items').insert(fixtures).run())
+      .then(() => rdb.table('feed_items').insert(feedItemFixtures).run())
       .then((results) => {
         expect(results.errors).to.equal(0, 'error insering fixtures');
         expect(results.inserted).to.equal(2);
@@ -157,23 +163,22 @@ describe('load_feed handler', () => {
       .then(() => rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).delete().run())
       .then(() => rdb.table('feeds').insert(feedFixtures).run())
       .then(() => rdb.table('feed_items').insert(feedItemFixtures).run())
-      .then(() => {
+      .then(() => new Promise((resolve /* , reject */) => {
         lf.work({ feedId }, (mesg) => {
           expect(mesg).to.equal('success');
-
-          // pull in everything to verify
-          rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).orderBy(rdb.desc('pub_date')).run()
-            .then((feedItems) => {
-              expect(feedItems.length).to.equal(20);
-              expect(feedItems[0].title).to.equal('Welcome to the new, new Ars Technica!');
-              expect(feedItems[0].feed_id).to.equal(feedId);
-              expect(feedItems[0].link).to.equal('http://arstechnica.com/staff/2016/07/welcome-to-the-new-new-ars-technica/');
-
-              expect(feedItems[19].title).to.equal('SpaceX in 2016: Launching more with a better rocket that it can land [Updated]');
-              expect(feedItems[0].feed_id).to.equal(feedId);
-              return;
-            });
+          resolve();
         });
+      }))
+      // pull in everything to verify
+      .then(() => rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).orderBy(rdb.desc('pub_date')).run())
+      .then((feedItems) => {
+        expect(feedItems.length).to.equal(20);
+        expect(feedItems[0].title).to.equal('Welcome to the new, new Ars Technica!');
+        expect(feedItems[0].feed_id).to.equal(feedId);
+        expect(feedItems[0].link).to.equal('http://arstechnica.com/staff/2016/07/welcome-to-the-new-new-ars-technica/');
+
+        expect(feedItems[19].title).to.equal('SpaceX in 2016: Launching more with a better rocket that it can land [Updated]');
+        expect(feedItems[0].feed_id).to.equal(feedId);
       })
       .then(() => done())
       .catch((err) => done(err));
@@ -191,26 +196,25 @@ describe('load_feed handler', () => {
     rdb.table('feeds').get(feedId).delete().run()
       .then(() => rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).delete().run())
       .then(() => rdb.table('feeds').insert(feedFixtures).run())
-      .then(() => {
+      .then(() => new Promise((resolve /* , reject */) => {
         lf.work({ feedId }, (mesg) => {
           expect(mesg).to.equal('success');
-
-          // pull in everything to verify
-          rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).orderBy(rdb.desc('pub_date')).run()
-            .then((feedItems) => {
-              expect(feedItems.length).to.equal(20);
-              expect(feedItems[0].title).to.equal('Sparks Lake');
-              expect(feedItems[0].feed_id).to.equal(feedId);
-              expect(feedItems[0].link).to.equal('https://500px.com/photo/166924739/sparks-lake-by-%C4%B0lhan-eroglu');
-              expect(feedItems[0].image_url).to.equal('https://drscdn.500px.org/photo/166924739/q%3D50_w%3D140_h%3D140/724c793e59cb3d4b21b6181e36cb231c?v=3');
-              expect(new Date(feedItems[0].pub_date).getTime())
-                        .to.equal(new Date('2016-08-08T14:57:00-04:00').getTime());
-
-              expect(feedItems[19].title).to.equal('Dream');
-              expect(feedItems[0].feed_id).to.equal(feedId);
-              return;
-            });
+          resolve();
         });
+      }))
+      // pull in everything to verify
+      .then(() => rdb.table('feed_items').getAll(feedId, { index: 'feed_id' }).orderBy(rdb.desc('pub_date')).run())
+      .then((feedItems) => {
+        expect(feedItems.length).to.equal(20);
+        expect(feedItems[0].title).to.equal('Sparks Lake');
+        expect(feedItems[0].feed_id).to.equal(feedId);
+        expect(feedItems[0].link).to.equal('https://500px.com/photo/166924739/sparks-lake-by-%C4%B0lhan-eroglu');
+        expect(feedItems[0].image_url).to.equal('https://drscdn.500px.org/photo/166924739/q%3D50_w%3D140_h%3D140/724c793e59cb3d4b21b6181e36cb231c?v=3');
+        expect(new Date(feedItems[0].pub_date).getTime())
+                  .to.equal(new Date('2016-08-08T14:57:00-04:00').getTime());
+
+        expect(feedItems[19].title).to.equal('Dream');
+        expect(feedItems[0].feed_id).to.equal(feedId);
       })
       .then(() => done())
       .catch((err) => done(err));

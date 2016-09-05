@@ -1,17 +1,17 @@
-/* eslint-disable new-cap */
-
+// require route files
 const express = require('express');
-const cl = require('chalkline'); // https://github.com/niftylettuce/chalkline
-const router = express.Router();
-const _ = require('lodash');
+const	root = require('./root');
+const	categories = require('./categories');
 
-/* GET home page. */
-router.get('/', (req, res /* , next*/) => {
-  cl.green();
-  const isProduction = (req.app.get('env') === 'production');
-  const params = _.merge({ title: 'Newspuppet', isProduction },
-                        req.app.resourcesManifest);
-  res.render('index', params);
-});
+// attach route files to paths
+const router = express.Router();
+
+router.use('/categories', categories);
+router.use('/category/:id', root);
+router.use('/home', root);
+router.use('/', root);
+
+// frontend react router mappings should map to root
+router.use('/category', root);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const fs = require('fs-extra-promise');
 const request = require('supertest');
 const expect = require('chai').expect;
 const server = require('../../server');
@@ -9,21 +10,27 @@ const rdb = require('rethinkdbdash')(dbConfig);
 
 describe('categories route:', () => {
   const feedFixtures = [
-    { id: 2, hash: '50cc46cbf0ad93502ea742c8e4008c52', name: 'BBC news', url: 'http://feeds.bbci.co.uk/news/technology/rss.xml', downloadable: true },
+    { id: 2, hash: '50cc46cbf0ad93502ea742c8e4008c52', name: 'BBC news', url: 'http://feeds.bbci.co.uk/news/technology/rss.xml' },
     { id: 3, hash: '85b0809277cb6106e362a0371d26e68a', name: 'Washington Post', url: ' http://feeds.washingtonpost.com/rss/national' },
-    { id: 5, hash: '1b9e1665491d16402eed265c92aec827', name: 'Ars Technica', url: 'http://arstechnica.com/feed/', downloadable: true },
-    { id: 6, hash: 'f011fadb7cbaf9f96d7be5482ccbddc8', name: 'Engadget', url: ' https://www.engadget.com/rss.xml' },
+    { id: 4, hash: '1b9e1665491d16402eed265c92aec827', name: 'Ars Technica', url: 'http://arstechnica.com/feed/' },
+    { id: 5, hash: 'f011fadb7cbaf9f96d7be5482ccbddc8', name: 'Engadget', url: ' https://www.engadget.com/rss.xml' },
   ];
   const categoriesFixtures = [
-    { id: 1, name: 'Wen', priority: 2, feeds: [5, 6] },
+    { id: 1, name: 'Tech', priority: 2, feeds: [4, 5] },
     { id: 2, name: 'Headline News', priority: 1, feeds: [2, 3] },
   ];
+  function cleanTables() {
+    return rdb.table('feeds').delete().run()
+              .then(() => rdb.table('categories').delete().run());
+  }
+
   before((done) => {
     try {
       rdb.table('feeds').delete().run()
-        .then(() => rdb.table('categories').delete().run())
         .then(() => rdb.table('feeds').insert(feedFixtures).run())
+        .then(() => rdb.table('categories').delete().run())
         .then(() => rdb.table('categories').insert(categoriesFixtures).run())
+        .then(() => fs.removeAsync('/tmp/newspuppet_test/public/categories'))
         .then(() => done())
         .catch((err) => done(err));
     }
@@ -32,13 +39,14 @@ describe('categories route:', () => {
     }
   });
 
+  after((done) => cleanTables().then(() => done()).catch((err) => done(err)));
+
   it('should get all categories', (done) => {
     request(server)
-    .get('/categories')
+    .get('/categories/')
     .expect(200)
     .expect((res) => {
       const body = res.body;
-      // console.log(body);
       expect(body.length).to.equal(2, 'should just return 2 category');
 
       expect(body[0].name).to.equal('Headline News');

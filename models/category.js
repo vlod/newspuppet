@@ -51,6 +51,7 @@ function feedItemsFor(feeds) {
 }
 
 module.exports = {
+  all: (rdbConn) => rdbConn.table('categories').orderBy('priority').run(),
   feedItems: (rdbConn, categoryId) => {
     rdb = rdbConn;
 

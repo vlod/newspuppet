@@ -5,17 +5,22 @@ const Category = require('../models/category');
 
 
 /* GET users listing. */
-router.get('/', (req, res /* , next */) => {
+router.get('/index.json', (req, res /* , next */) => {
+  console.log("ROUTE: /index.json");
   const rdb = req.app.locals.rdb;
 
   rdb.table('categories').orderBy('priority').run()
     .then((results) => {
+      console.log(`/categories got: ${JSON.stringify(results)}`);
       res.json(results);
     });
 });
 
-router.get('/:id', (req, res /* , next */) => {
+router.get('/:id.json', (req, res /* , next */) => {
+  console.log("ROUTE: /:id.json");
+
   const categoryId = req.params.id;
+  console.log(`ROUTE: /categories/${categoryId}`);
 
   Category.feedItems(req.app.locals.rdb, categoryId)
     .then((results) => {

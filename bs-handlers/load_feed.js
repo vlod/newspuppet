@@ -47,9 +47,6 @@ module.exports = (config) => {
   //   return rdb.table('feed_items').insert(articles, { conflict: 'update' }).run();
   // }
 
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
 
   function _insertArticles(articles) {
     return rdb.table('feed_items').insert(articles).run();
@@ -104,23 +101,6 @@ module.exports = (config) => {
       })
       .then((results) => {
         winston.info(`feed_items inserted ${results.inserted} items`);
-
-        // if we are interested in downloading the individual articles go kick them of
-        if (feed.downloadable) {
-          for (const article of newArticles) {
-            const delay = getRandomInt(3, 92);
-            emitter.put(0, delay, 60, JSON.stringify(['default', {
-              type: 'load_page',
-              payload: { feedItemId: article.id,
-                        feedDigest: md5Digest,
-                        url: article.link },
-            }]), (error, jobId) => {
-              if (error) throw error;
-
-              winston.info(`feedItemId:${article.id} emitted job [load_page] in ${delay} secs jobId: ${jobId}`);
-            });
-          }
-        }
         callback('success');
       })
       .catch((err) => {

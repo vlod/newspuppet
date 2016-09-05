@@ -6,10 +6,6 @@ const winston = require('winston');
 const Iconv = require('iconv').Iconv;
 const handlersCommon = require('./handlers_common');
 
-// const fivebeans = require('fivebeans');
-
-// const feedDirAlreadyCreated = {};
-
 module.exports = (config) => {
   const { rdb, emitter, projectDir } = config;
   const type = 'get_feed';
