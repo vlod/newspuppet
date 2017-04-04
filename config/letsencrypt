@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+# to get it to run monthly, store in: /etc/cron.monthly
+cd /opt/installs/certbot
+./certbot-auto renew --webroot -w /var/www/html --post-hook "service nginx reload"
